@@ -35,7 +35,7 @@ namespace WinFormsApp1
             this.Text = "Product Management";
             this.StartPosition = FormStartPosition.CenterParent;
 
-            // Product grid
+            
             dgvProducts = new DataGridView
             {
                 Location = new Point(20, 20),
@@ -48,7 +48,7 @@ namespace WinFormsApp1
             SetupProductGrid();
             dgvProducts.SelectionChanged += DgvProducts_SelectionChanged;
 
-            // Input controls
+            
             GroupBox gbInput = new GroupBox
             {
                 Text = "Product Details",
@@ -68,7 +68,7 @@ namespace WinFormsApp1
             Label lblCategory = new Label { Text = "Category:", Location = new Point(20, 120), Size = new Size(60, 23) };
             cmbCategory = new ComboBox { Location = new Point(90, 120), Size = new Size(150, 23), DropDownStyle = ComboBoxStyle.DropDownList };
 
-            // Image controls
+           
             Label lblImage = new Label { Text = "Image:", Location = new Point(20, 150), Size = new Size(60, 23) };
             btnSelectImage = new Button { Text = "Select Image", Location = new Point(90, 150), Size = new Size(100, 30), BackColor = Color.LightYellow };
             btnSelectImage.Click += BtnSelectImage_Click;
@@ -81,7 +81,7 @@ namespace WinFormsApp1
                 ForeColor = Color.Gray
             };
 
-            // Picture box for image preview
+            
             picProductImage = new PictureBox
             {
                 Location = new Point(450, 30),
@@ -197,7 +197,7 @@ namespace WinFormsApp1
                     lblImagePath.Text = Path.GetFileName(selectedImagePath);
                     lblImagePath.ForeColor = Color.Black;
 
-                    // Show preview
+                    
                     try
                     {
                         picProductImage.Image = Image.FromFile(selectedImagePath);
@@ -225,7 +225,7 @@ namespace WinFormsApp1
                 txtQuantity.Text = selectedProduct.Quantity.ToString();
                 cmbCategory.SelectedValue = selectedProduct.CategoryId;
 
-                // Load image if exists
+                
                 if (!string.IsNullOrEmpty(selectedProduct.ImagePath) && File.Exists(selectedProduct.ImagePath))
                 {
                     try
@@ -279,18 +279,18 @@ namespace WinFormsApp1
 
                         command.ExecuteNonQuery();
 
-                        // Get the last inserted row ID using a separate query
+                        
                         var getIdCommand = new SqliteCommand("SELECT last_insert_rowid()", connection);
                         long productId = (long)getIdCommand.ExecuteScalar();
 
-                        // Save image if selected
+                        
                         string savedImagePath = null;
                         if (!string.IsNullOrEmpty(selectedImagePath))
                         {
                             savedImagePath = DatabaseHelper.SaveProductImage(selectedImagePath, (int)productId);
                         }
 
-                        // Update the product with the image path
+                        
                         if (savedImagePath != null)
                         {
                             string updateQuery = "UPDATE Products SET ImagePath = @imagePath WHERE Id = @id";
@@ -306,7 +306,7 @@ namespace WinFormsApp1
                 LoadProducts();
                 ClearInputs();
                 MessageBox.Show("Product added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.DialogResult = DialogResult.OK; // Signal MainForm that an update occurred
+                this.DialogResult = DialogResult.OK; 
                 
             }
         }
@@ -319,8 +319,8 @@ namespace WinFormsApp1
                 {
                     connection.Open();
 
-                    // Save new image if selected
-                    string savedImagePath = selectedProduct.ImagePath; // Keep existing path by default
+                    
+                    string savedImagePath = selectedProduct.ImagePath; 
                     if (!string.IsNullOrEmpty(selectedImagePath) && selectedImagePath != selectedProduct.ImagePath)
                     {
                         // Delete old image
@@ -344,7 +344,7 @@ namespace WinFormsApp1
                 LoadProducts();
                 ClearInputs();
                 MessageBox.Show("Product updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.DialogResult = DialogResult.OK; // Signal MainForm that an update occurred
+                this.DialogResult = DialogResult.OK; 
 
             }
         }
@@ -370,13 +370,13 @@ namespace WinFormsApp1
                         }
                     }
 
-                    // Delete associated image
+                    
                     DatabaseHelper.DeleteProductImage(selectedProduct.ImagePath);
 
                     LoadProducts();
                     ClearInputs();
                     MessageBox.Show("Product deleted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.DialogResult = DialogResult.OK; // Signal MainForm that an update occurred
+                    this.DialogResult = DialogResult.OK; 
 
                 }
             }
@@ -429,7 +429,7 @@ namespace WinFormsApp1
 
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
-            // Clean up image resources
+           
             if (picProductImage.Image != null)
             {
                 picProductImage.Image.Dispose();

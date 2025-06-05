@@ -16,7 +16,7 @@ namespace WinFormsApp1
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // Initialize database
+            
             DatabaseHelper.InitializeDatabase();
             Application.Run(new LoginForm());
         }

@@ -11,15 +11,13 @@ namespace WinFormsApp1
 
         public static void InitializeDatabase()
         {
-            // Ensure the Images directory exists for product images
+            
             if (!Directory.Exists("Images"))
             {
                 Directory.CreateDirectory("Images");
             }
 
-            // --- IMPORTANT: Delete the database file if it exists to ensure a clean start ---
-            // This is crucial during development, especially after schema changes (like adding ON DELETE CASCADE).
-            // It ensures the database is always created with the latest schema definition.
+           
             if (File.Exists(dbFileName))
             {
                 Console.WriteLine($"Deleting existing database file: {dbFileName}");
@@ -31,15 +29,12 @@ namespace WinFormsApp1
                 catch (IOException ex)
                 {
                     Console.WriteLine($"Error deleting database file. It might be in use: {ex.Message}");
-                    // If the file is in use, the application might still proceed with the old DB
-                    // or fail later. For robust development, ensure the app is fully closed.
-                    // You might want to throw an exception here or exit the application
-                    // if a clean start is absolutely critical.
-                    return; // Exit if we can't delete the old database.
+                 
+                    return; 
                 }
             }
 
-            // After ensuring the old DB is gone, create a new one by opening and closing a connection.
+            
             using (var touchConnection = new SqliteConnection(connectionString))
             {
                 touchConnection.Open();
@@ -51,15 +46,14 @@ namespace WinFormsApp1
             {
                 connection.Open();
 
-                // Enable foreign key enforcement for this connection.
-                // This must be done for each new connection to ensure constraints are active.
+               
                 using (var command = new SqliteCommand("PRAGMA foreign_keys = ON;", connection))
                 {
                     command.ExecuteNonQuery();
                     Console.WriteLine("PRAGMA foreign_keys = ON; executed.");
                 }
 
-                // Create Users table if it doesn't exist
+                
                 string createUsersTable = @"
                     CREATE TABLE IF NOT EXISTS Users (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -68,14 +62,14 @@ namespace WinFormsApp1
                         Role TEXT NOT NULL
                     )";
 
-                // Create Categories table if it doesn't exist
+               
                 string createCategoriesTable = @"
                     CREATE TABLE IF NOT EXISTS Categories (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         Name TEXT UNIQUE NOT NULL
                     )";
 
-                // Create Products table if it doesn't exist, including UNIQUE constraints and ON DELETE CASCADE
+               
                 string createProductsTable = @"
                     CREATE TABLE IF NOT EXISTS Products (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -87,9 +81,9 @@ namespace WinFormsApp1
                         Barcode TEXT UNIQUE,
                         FOREIGN KEY (CategoryId) REFERENCES Categories (Id) ON DELETE CASCADE
                     )";
-                // ON DELETE CASCADE ensures that when a category is deleted, all associated products are also deleted.
+                
 
-                // Execute table creation commands
+               
                 using (var command = new SqliteCommand(createUsersTable, connection))
                     command.ExecuteNonQuery();
                 Console.WriteLine("Users table created/verified.");
@@ -102,12 +96,7 @@ namespace WinFormsApp1
                     command.ExecuteNonQuery();
                 Console.WriteLine("Products table created/verified.");
 
-                // The following ALTER TABLE statements are primarily for schema migration from older versions
-                // where these columns might not have been part of the initial CREATE TABLE.
-                // With the database file being deleted and recreated, these might become redundant for new runs,
-                // but are kept for robustness if you ever stop deleting the DB file.
-
-                // Add ImagePath column to existing Products table if it doesn't exist
+                
                 if (!ColumnExists(connection, "Products", "ImagePath"))
                 {
                     try
@@ -123,7 +112,7 @@ namespace WinFormsApp1
                     }
                 }
 
-                // Add Barcode column to existing Products table if it doesn't exist
+               
                 if (!ColumnExists(connection, "Products", "Barcode"))
                 {
                     try
@@ -139,22 +128,21 @@ namespace WinFormsApp1
                     }
                 }
 
-                // Clear existing sample data before inserting new ones.
-                // This ensures that each time InitializeDatabase() runs, the sample data is reset.
+                
                 ClearAllSampleData(connection);
 
-                // Insert default data.
+                
                 InsertDefaultData(connection);
             }
         }
 
         /// <summary>
-        /// Helper method to check if a column exists in a specified table.
+        /// Tuhain tabled column ni baigaa esehiig shalgadag helper method
         /// </summary>
-        /// <param name="connection">The active SqliteConnection.</param>
-        /// <param name="tableName">The name of the table to check.</param>
-        /// <param name="columnName">The name of the column to look for.</param>
-        /// <returns>True if the column exists, false otherwise.</returns>
+        /// <param name="connection">Idevhtei baigaa SqliteConnection.</param>
+        /// <param name="tableName">Table-iin ner</param>
+        /// <param name="columnName">Columniin ner</param>
+        /// <returns>Davhardsan bol true ugui bol false</returns>
         private static bool ColumnExists(SqliteConnection connection, string tableName, string columnName)
         {
             string query = $"PRAGMA table_info({tableName})";
@@ -175,17 +163,15 @@ namespace WinFormsApp1
         }
 
         /// <summary>
-        /// Clears all existing data from the Products, Categories, and Users tables.
-        /// Products are deleted first due to foreign key dependency on Categories.
+        /// Ehleed db ee tseverlej baigaa 
+        /// Product ehleed ustgaj baigaa
         /// </summary>
-        /// <param name="connection">The active SqliteConnection.</param>
+        /// <param name="connection">SqliteConnection</param>
         private static void ClearAllSampleData(SqliteConnection connection)
         {
             Console.WriteLine("Attempting to clear existing sample data...");
 
-            // Delete from Products table first to satisfy foreign key constraints.
-            // ON DELETE CASCADE on the schema will handle this automatically if categories are deleted,
-            // but explicit deletion here ensures order and works even if cascade wasn't fully active before.
+            
             string deleteProducts = "DELETE FROM Products";
             using (var command = new SqliteCommand(deleteProducts, connection))
             {
@@ -193,7 +179,7 @@ namespace WinFormsApp1
                 Console.WriteLine("Products data cleared.");
             }
 
-            // Delete from Categories table.
+            
             string deleteCategories = "DELETE FROM Categories";
             using (var command = new SqliteCommand(deleteCategories, connection))
             {
@@ -201,7 +187,7 @@ namespace WinFormsApp1
                 Console.WriteLine("Categories data cleared.");
             }
 
-            // Delete from Users table.
+            
             string deleteUsers = "DELETE FROM Users";
             using (var command = new SqliteCommand(deleteUsers, connection))
             {
@@ -212,14 +198,13 @@ namespace WinFormsApp1
         }
 
         /// <summary>
-        /// Inserts default sample data into the Users, Categories, and Products tables.
-        /// Uses INSERT OR IGNORE to prevent duplicate entries if the unique constraints are met.
+        /// Sample data
         /// </summary>
-        /// <param name="connection">The active SqliteConnection.</param>
+        /// <param name="connection">SqliteConnection.</param>
         private static void InsertDefaultData(SqliteConnection connection)
         {
             Console.WriteLine("Inserting default data...");
-            // Insert default users
+            
             string insertUsers = @"
                 INSERT OR IGNORE INTO Users (Username, Password, Role) VALUES
                 ('Saraa', 'manager123', 'Manager'),
@@ -229,7 +214,7 @@ namespace WinFormsApp1
                 command.ExecuteNonQuery();
             Console.WriteLine("Default users inserted.");
 
-            // Insert default categories
+            
             string insertCategories = @"
                 INSERT OR IGNORE INTO Categories (Name) VALUES
                 ('Electronics'),
@@ -240,7 +225,7 @@ namespace WinFormsApp1
                 command.ExecuteNonQuery();
             Console.WriteLine("Default categories inserted.");
 
-            // Insert sample products
+           
             string insertProducts = @"
                 INSERT OR IGNORE INTO Products (Name, Price, Quantity, CategoryId, ImagePath, Barcode) VALUES
                 ('Smartphone', 599.99, 50, 1, NULL, '1234567890123'),
@@ -255,20 +240,20 @@ namespace WinFormsApp1
         }
 
         /// <summary>
-        /// Provides an open SqliteConnection to the database.
+        /// SqliteConnection db dee beldej ogj baigaa
         /// </summary>
-        /// <returns>A new SqliteConnection instance.</returns>
+        /// <returns>SqliteConnection-ii instance butsaana </returns>
         public static SqliteConnection GetConnection()
         {
             return new SqliteConnection(connectionString);
         }
 
         /// <summary>
-        /// Saves a product image to the 'Images' directory and returns its new path.
+        /// Images-iin zamd buteegdhuunii zurgiig hadgalaadshine zamaa butsaana 
         /// </summary>
-        /// <param name="sourceImagePath">The original path of the image file.</param>
-        /// <param name="productId">The ID of the product associated with the image.</param>
-        /// <returns>The path to the saved image, or null if saving failed.</returns>
+        /// <param name="sourceImagePath"></param>
+        /// <param name="productId"></param>
+        /// <returns></returns>
         public static string SaveProductImage(string sourceImagePath, int productId)
         {
             try
@@ -277,7 +262,7 @@ namespace WinFormsApp1
                     return null;
 
                 string imageDir = "Images";
-                Directory.CreateDirectory(imageDir); // Ensure directory exists
+                Directory.CreateDirectory(imageDir); 
 
                 string extension = Path.GetExtension(sourceImagePath);
                 string fileName = $"product_{productId}{extension}";
@@ -294,9 +279,9 @@ namespace WinFormsApp1
         }
 
         /// <summary>
-        /// Deletes a product image file from the specified path.
+        /// Zaasan zamaas zurgiig ustgana
         /// </summary>
-        /// <param name="imagePath">The path of the image file to delete.</param>
+        /// <param name="imagePath"></param>
         public static void DeleteProductImage(string imagePath)
         {
             try

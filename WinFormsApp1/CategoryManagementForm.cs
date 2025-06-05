@@ -30,7 +30,7 @@ namespace WinFormsApp1
             this.Text = "Category Management";
             this.StartPosition = FormStartPosition.CenterParent;
 
-            // Category grid
+            
             dgvCategories = new DataGridView
             {
                 Location = new Point(20, 20),
@@ -48,7 +48,7 @@ namespace WinFormsApp1
 
             dgvCategories.SelectionChanged += DgvCategories_SelectionChanged;
 
-            // Input controls
+            
             GroupBox gbInput = new GroupBox
             {
                 Text = "Category Details",
@@ -166,8 +166,8 @@ namespace WinFormsApp1
                         }
                         catch (SqliteException ex)
                         {
-                            // Check for constraint violations (like UNIQUE constraint)
-                            if (ex.SqliteExtendedErrorCode == 2067 || // SQLITE_CONSTRAINT_UNIQUE
+                            
+                            if (ex.SqliteExtendedErrorCode == 2067 || 
                                 ex.Message.Contains("UNIQUE constraint failed"))
                             {
                                 MessageBox.Show("Category name already exists! Please choose a different name.",
@@ -207,7 +207,7 @@ namespace WinFormsApp1
                         }
                         catch (SqliteException ex)
                         {
-                            // Check for constraint violations (like UNIQUE constraint)
+                            
                             if (ex.SqliteExtendedErrorCode == 2067 || // SQLITE_CONSTRAINT_UNIQUE
                                 ex.Message.Contains("UNIQUE constraint failed"))
                             {
@@ -231,7 +231,7 @@ namespace WinFormsApp1
             {
                 var selectedCategory = (Category)dgvCategories.SelectedRows[0].DataBoundItem;
 
-                // Check if category is being used by any products
+                
                 using (var connection = DatabaseHelper.GetConnection())
                 {
                     connection.Open();

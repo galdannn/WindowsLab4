@@ -35,14 +35,14 @@ namespace WinFormsApp1
         {
             this.SuspendLayout();
 
-            // Set up the UserControl
+            
             this.Size = new Size(180, 220);
             this.BackColor = Color.White;
             this.BorderStyle = BorderStyle.FixedSingle;
             this.Cursor = Cursors.Hand;
             this.Margin = new Padding(5);
 
-            // Product Image
+            
             picProductImage = new PictureBox
             {
                 Location = new Point(10, 10),
@@ -52,7 +52,7 @@ namespace WinFormsApp1
                 BackColor = Color.LightGray
             };
 
-            // Product Name
+           
             lblProductName = new Label
             {
                 Location = new Point(10, 140),
@@ -63,7 +63,7 @@ namespace WinFormsApp1
                 Text = "Product Name"
             };
 
-            // Product Price
+           
             lblProductPrice = new Label
             {
                 Location = new Point(10, 170),
@@ -74,7 +74,7 @@ namespace WinFormsApp1
                 Text = "$0.00"
             };
 
-            // Product Stock
+            
             lblProductStock = new Label
             {
                 Location = new Point(10, 190),
@@ -85,17 +85,17 @@ namespace WinFormsApp1
                 Text = "Stock: 0"
             };
 
-            // Add controls to the UserControl
+            
             this.Controls.AddRange(new Control[] { picProductImage, lblProductName, lblProductPrice, lblProductStock });
 
-            // Add click events to all controls
+            
             this.Click += ProductButtonControl_Click;
             picProductImage.Click += ProductButtonControl_Click;
             lblProductName.Click += ProductButtonControl_Click;
             lblProductPrice.Click += ProductButtonControl_Click;
             lblProductStock.Click += ProductButtonControl_Click;
 
-            // Add hover effects
+            
             this.MouseEnter += ProductButtonControl_MouseEnter;
             this.MouseLeave += ProductButtonControl_MouseLeave;
             picProductImage.MouseEnter += ProductButtonControl_MouseEnter;
@@ -118,7 +118,7 @@ namespace WinFormsApp1
             lblProductPrice.Text = _product.Price.ToString("C");
             lblProductStock.Text = $"Stock: {_product.Quantity}";
 
-            // Update stock color based on quantity
+            
             if (_product.Quantity == 0)
             {
                 lblProductStock.ForeColor = Color.Red;
@@ -133,7 +133,7 @@ namespace WinFormsApp1
                 lblProductStock.ForeColor = Color.Green;
             }
 
-            // Load product image
+            
             LoadProductImage();
         }
 
@@ -143,7 +143,7 @@ namespace WinFormsApp1
             {
                 if (!string.IsNullOrEmpty(_product.ImagePath) && File.Exists(_product.ImagePath))
                 {
-                    // Dispose of the previous image to avoid memory leaks
+                    // Omnoh zurgiig ni hayah
                     if (picProductImage.Image != null)
                     {
                         picProductImage.Image.Dispose();
@@ -152,7 +152,7 @@ namespace WinFormsApp1
                 }
                 else
                 {
-                    // Use a default image or placeholder
+                    //default image
                     if (picProductImage.Image != null)
                     {
                         picProductImage.Image.Dispose();
@@ -162,7 +162,7 @@ namespace WinFormsApp1
             }
             catch (Exception)
             {
-                // If there's an error loading the image, use default
+                
                 if (picProductImage.Image != null)
                 {
                     picProductImage.Image.Dispose();
@@ -173,7 +173,7 @@ namespace WinFormsApp1
 
         private Image CreateDefaultImage()
         {
-            // Create a simple default image
+            // default image
             Bitmap defaultImage = new Bitmap(160, 120);
             using (Graphics g = Graphics.FromImage(defaultImage))
             {

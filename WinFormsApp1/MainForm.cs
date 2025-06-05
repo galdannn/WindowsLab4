@@ -8,8 +8,8 @@ using PdfSharp.Pdf;
 using PdfSharp.Drawing;
 using PdfSharp.Fonts;
 using System.Reflection;
-using System.IO; // For Path and File operations
-using System.Diagnostics; // For Process.Start
+using System.IO; 
+using System.Diagnostics; 
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 using Syncfusion.Pdf.Graphics;
@@ -23,7 +23,7 @@ namespace WinFormsApp1
         private List<CartItem> cart = new List<CartItem>();
         private ContextMenuStrip userContextMenu;
 
-        //private Product? selectedProduct;
+        
 
         public MainForm(User user)
         {
@@ -33,7 +33,7 @@ namespace WinFormsApp1
             InitializeUserMenu();
             LoadCart();
             LoadCategories();
-            LoadProducts(); // Add this line to load products on startup
+            LoadProducts(); 
         }
 
         private void InitializeCustomComponent()
@@ -60,7 +60,7 @@ namespace WinFormsApp1
             btnUser.TextAlign = ContentAlignment.MiddleCenter;
 
 
-            // Create context menu based on user role
+            
             CreateUserContextMenu();
         }
 
@@ -72,7 +72,7 @@ namespace WinFormsApp1
             userContextMenu.BackColor = Color.White;
             userContextMenu.Font = new Font("Segoe UI", 9);
 
-            // Common menu items for all users
+            // Buh hereglegchded haragdah menu 
             ToolStripMenuItem userInfoItem = new ToolStripMenuItem();
             userInfoItem.Text = $"User: {currentUser.Username}";
             userInfoItem.Enabled = false;
@@ -87,29 +87,29 @@ namespace WinFormsApp1
 
             userContextMenu.Items.Add(new ToolStripSeparator());
 
-            // Role-specific menu items
+            // Role deer ni tohiroh menu 
             if (currentUser.Role.Equals("Manager", StringComparison.OrdinalIgnoreCase))
             {
-                // Manager-specific items
+                // Manager
                 ToolStripMenuItem addAccountItem = new ToolStripMenuItem();
                 addAccountItem.Text = "Add Account";
-                //addAccountItem.Image = Properties.Resources.add_user_icon; // Optional: add icon
+                
                 addAccountItem.Click += AddAccount_Click;
                 userContextMenu.Items.Add(addAccountItem);
 
                 ToolStripMenuItem updateEmployeeItem = new ToolStripMenuItem();
                 updateEmployeeItem.Text = "Update Employee Info";
-                //updateEmployeeItem.Image = Properties.Resources.edit_user_icon; // Optional: add icon
+                
                 updateEmployeeItem.Click += UpdateEmployee_Click;
                 userContextMenu.Items.Add(updateEmployeeItem);
 
                 userContextMenu.Items.Add(new ToolStripSeparator());
             }
 
-            // Logout item (common for all users)
+            // Logout
             ToolStripMenuItem logoutItem = new ToolStripMenuItem();
             logoutItem.Text = "Logout";
-            //logoutItem.Image = Properties.Resources.logout_icon; // Optional: add icon
+            
             logoutItem.ForeColor = Color.Red;
             logoutItem.Click += Logout_Click;
             userContextMenu.Items.Add(logoutItem);
@@ -124,7 +124,7 @@ namespace WinFormsApp1
 
         private void AddAccount_Click(object sender, EventArgs e)
         {
-            // Open Add Account dialog
+            
             AddAccountForm addAccountForm = new AddAccountForm();
             if (addAccountForm.ShowDialog() == DialogResult.OK)
             {
@@ -135,7 +135,7 @@ namespace WinFormsApp1
 
         private void UpdateEmployee_Click(object sender, EventArgs e)
         {
-            // Open Update Employee dialog
+            
             UpdateEmployeeForm updateEmployeeForm = new UpdateEmployeeForm();
             if (updateEmployeeForm.ShowDialog() == DialogResult.OK)
             {
@@ -175,17 +175,17 @@ namespace WinFormsApp1
             string searchText = txtSearch.Text.Trim();
             if (string.IsNullOrEmpty(searchText))
             {
-                // If search is empty, show all products
+                // hailt hooson baival bugdiig ni haruulna
                 LoadProducts();
                 return;
             }
 
-            // Search and display matching products
+            // Taarsan hailtiin buteegdehuuniig haruulna 
             var searchResults = SearchProducts(searchText);
             DisplayProducts(searchResults);
         }
 
-        // Handle form resize to keep button in top right
+        // Tovchoo baruun deed tald bailgah
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
@@ -197,7 +197,7 @@ namespace WinFormsApp1
 
         private void ConfigureMenuBasedOnRole()
         {
-            // Hide manager-only menu items for non-managers
+            // Managerees busdad ni menugee nuuh 
             if (currentUser.Role != "Manager")
             {
                 productsToolStripMenuItem.Visible = false;
@@ -220,14 +220,17 @@ namespace WinFormsApp1
             ShowHelp();
         }
 
-        // NEW METHOD: Load and display all products
+       
         private void LoadProducts()
         {
             var products = GetAllProducts();
             DisplayProducts(products);
         }
 
-        // NEW METHOD: Get all products from database
+        /// <summary>
+        /// BUh buteegdehuunee db-ees avah
+        /// </summary>
+        /// <returns></returns>
         private List<Product> GetAllProducts()
         {
             List<Product> products = new List<Product>();
@@ -263,10 +266,10 @@ namespace WinFormsApp1
             return products;
         }
 
-        // NEW METHOD: Display products in flowLayoutPanel2
+        //Buteegdehuunuuduue flowlayoutpaneldee haruulah 
         private void DisplayProducts(List<Product> products)
         {
-            // Clear existing controls
+            
             flowLayoutPanel2.Controls.Clear();
 
             foreach (var product in products)
@@ -274,7 +277,7 @@ namespace WinFormsApp1
                 var productButton = new ProductButtonControl();
                 productButton.Product = product;
 
-                // Handle product click
+                // Product deeer darval addproducttocart duudah
                 productButton.ProductClicked += (sender, clickedProduct) =>
                 {
                     if (clickedProduct != null)
@@ -291,7 +294,7 @@ namespace WinFormsApp1
         {
             if (productToAdd == null) return;
 
-            if (productToAdd.Quantity <= 0) // Check if product is out of stock before adding
+            if (productToAdd.Quantity <= 0) // Nemeheesee omno duussan eshiig shalgana
             {
                 MessageBox.Show($"'{productToAdd.Name}' is out of stock.", "Out of Stock", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -300,7 +303,7 @@ namespace WinFormsApp1
             var existingItem = cart.FirstOrDefault(c => c.Product.Id == productToAdd.Id);
             if (existingItem != null)
             {
-                // Check if adding another one exceeds available stock
+                // Nootsond baigaa buteegdehuunees davj baigaa esehiig shalgana
                 if (existingItem.Quantity < productToAdd.Quantity)
                 {
                     existingItem.Quantity++;
@@ -308,17 +311,17 @@ namespace WinFormsApp1
                 else
                 {
                     MessageBox.Show($"Cannot add more of '{productToAdd.Name}'. Stock limit reached in cart.", "Stock Limit", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return; // Stop if stock limit is reached
+                    return; 
                 }
             }
             else
             {
-                // Product is not in cart, add as new item (quantity 1)
-                // We already checked productToAdd.Quantity > 0 at the beginning of the method.
+                // Tergend baihgui bol shine itemeer nemne
+                // 0-ees ih tootoi baigaa eshiig ni hamgiin ehend ali hediin shalgasan
                 cart.Add(new CartItem { Product = productToAdd, Quantity = 1 });
             }
 
-            LoadCart(); // Refreshes cart display and updates total price
+            LoadCart(); //Sags bolon total aa refreshdene
         }
 
 
@@ -348,23 +351,23 @@ namespace WinFormsApp1
             PaymentForm paymentForm = new PaymentForm(total);
             if (paymentForm.ShowDialog() == DialogResult.OK)
             {
-                // Get payment details from PaymentForm
+                
                 decimal amountPaid = paymentForm.AmountPaid;
                 decimal changeGiven = paymentForm.ChangeGiven;
 
-                // Create a copy of the cart for the receipt before clearing it
+                
                 List<CartItem> receiptCartItems = new List<CartItem>(cart.Select(ci =>
-                    new CartItem { Product = ci.Product, Quantity = ci.Quantity } // Create a shallow copy or deep if Product can change
+                    new CartItem { Product = ci.Product, Quantity = ci.Quantity } 
                 ));
 
-                // Generate Receipt
+                
                 GenerateReceipt(receiptCartItems, total, amountPaid, changeGiven, currentUser);
 
                 UpdateStock();
                 cart.Clear();
                 RefreshCartDisplay();
                 UpdateTotalPrice();
-                LoadProducts(); // Refresh product display to show updated stock
+                LoadProducts(); // Shinechlegdsen nootsoo haruulna
                 MessageBox.Show("Payment completed successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -376,8 +379,7 @@ namespace WinFormsApp1
                 connection.Open();
                 foreach (var item in cart)
                 {
-                    // Ensure we don't try to reduce stock below zero if something went wrong with previous checks
-                    // Though the logic in AddProductToCart should prevent quantity in cart exceeding stock
+                    
                     string query = "UPDATE Products SET Quantity = Quantity - @quantity WHERE Id = @id AND Quantity >= @quantity";
                     using (var command = new SqliteCommand(query, connection))
                     {
@@ -386,9 +388,7 @@ namespace WinFormsApp1
                         int rowsAffected = command.ExecuteNonQuery();
                         if (rowsAffected == 0)
                         {
-                            // This could happen if stock was updated by another process or a mismatch.
-                            // Log this or handle as an error. For now, we'll assume it worked.
-                            // You might want to re-query actual stock here.
+                            
                             MessageBox.Show($"Warning: Stock for {item.Product.Name} might not have been updated correctly or was insufficient.", "Stock Update Issue", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
@@ -396,71 +396,7 @@ namespace WinFormsApp1
             }
         }
 
-        private Product? SearchProduct(string searchText)
-        {
-            using (var connection = DatabaseHelper.GetConnection())
-            {
-                connection.Open();
-                // First try to parse as ID (if it's a number)
-                if (int.TryParse(searchText, out int productId))
-                {
-                    // Search by ID first
-                    string idQuery = @"SELECT p.*, c.Name as CategoryName 
-                              FROM Products p 
-                              LEFT JOIN Categories c ON p.CategoryId = c.Id 
-                              WHERE p.Id = @id";
-                    using (var command = new SqliteCommand(idQuery, connection))
-                    {
-                        command.Parameters.AddWithValue("@id", productId);
-                        using (var reader = command.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                return new Product
-                                {
-                                    Id = reader.GetInt32("Id"),
-                                    Name = reader.GetString("Name"),
-                                    Price = reader.GetDecimal("Price"),
-                                    Quantity = reader.GetInt32("Quantity"),
-                                    CategoryId = reader.GetInt32("CategoryId"),
-                                    CategoryName = reader.IsDBNull("CategoryName") ? "" : reader.GetString("CategoryName"),
-                                    Barcode = reader.IsDBNull("Barcode") ? "" : reader.GetString("Barcode"),
-                                    ImagePath = reader.IsDBNull("ImagePath") ? "" : reader.GetString("ImagePath")
-                                };
-                            }
-                        }
-                    }
-                }
-
-                // If not found by ID or not a number, search by name (case-insensitive)
-                string nameQuery = @"SELECT p.*, c.Name as CategoryName 
-                            FROM Products p 
-                            LEFT JOIN Categories c ON p.CategoryId = c.Id 
-                            WHERE LOWER(p.Name) LIKE LOWER(@name)";
-                using (var command = new SqliteCommand(nameQuery, connection))
-                {
-                    command.Parameters.AddWithValue("@name", $"%{searchText}%");
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return new Product
-                            {
-                                Id = reader.GetInt32("Id"),
-                                Name = reader.GetString("Name"),
-                                Price = reader.GetDecimal("Price"),
-                                Quantity = reader.GetInt32("Quantity"),
-                                CategoryId = reader.GetInt32("CategoryId"),
-                                CategoryName = reader.IsDBNull("CategoryName") ? "" : reader.GetString("CategoryName"),
-                                Barcode = reader.IsDBNull("Barcode") ? "" : reader.GetString("Barcode"),
-                                ImagePath = reader.IsDBNull("ImagePath") ? "" : reader.GetString("ImagePath")
-                            };
-                        }
-                    }
-                }
-            }
-            return null;
-        }
+       
 
         private List<Product> SearchProducts(string searchText)
         {
@@ -480,7 +416,7 @@ namespace WinFormsApp1
                 {
                     command.Parameters.AddWithValue("@name", $"%{searchText}%");
                     command.Parameters.AddWithValue("@barcode", $"%{searchText}%");
-                    // Try to parse as ID, if fails use -1 (which won't match any ID)
+                    
                     int.TryParse(searchText, out int productId);
                     command.Parameters.AddWithValue("@id", productId);
 
@@ -511,7 +447,7 @@ namespace WinFormsApp1
             ProductManagementForm form = new ProductManagementForm();
             if (form.ShowDialog() == DialogResult.OK)
             {
-                // Refresh products when product management form is closed
+                
                 LoadProducts();
             }
         }
@@ -521,7 +457,7 @@ namespace WinFormsApp1
             CategoryManagementForm form = new CategoryManagementForm();
             if (form.ShowDialog() == DialogResult.OK)
             {
-                // Refresh products when product management form is closed
+                
                 LoadCategories();
             }
         }
@@ -549,14 +485,14 @@ namespace WinFormsApp1
 
         private void AddCartItemToUI(CartItem item)
         {
-            // Create your custom CartItemControl
+            
             var cartControl = new CartItemControl();
             cartControl.CartItem = item;
 
-            // Subscribe to the events from your CartItemControl
+            
             cartControl.PlusClicked += (sender, cartItem) =>
             {
-                // Check stock limit before adding
+                
                 if (cartItem.Quantity < cartItem.Product.Quantity)
                 {
                     cartItem.Quantity++;
@@ -579,7 +515,7 @@ namespace WinFormsApp1
                 }
                 else
                 {
-                    // Remove item if quantity becomes 0
+                    
                     cart.Remove(cartItem);
 
                 }
@@ -589,13 +525,13 @@ namespace WinFormsApp1
 
             cartControl.DeleteClicked += (sender, cartItem) =>
             {
-                // Remove item from cart
+                
                 cart.Remove(cartItem);
                 RefreshCartDisplay();
                 UpdateTotalPrice();
             };
 
-            // Add the control to your FlowLayoutPanel
+            
             cartflowLayoutPanel.Controls.Add(cartControl);
         }
         private List<Category> GetAllCategories()
@@ -632,12 +568,12 @@ namespace WinFormsApp1
 
             flowLayoutPanel3.SuspendLayout();
             flowLayoutPanel3.Controls.Clear();
-            flowLayoutPanel3.WrapContents = true; // Or false, depending on desired layout
+            flowLayoutPanel3.WrapContents = true; 
 
-            // Add an "All Products" button
+            
             var allCategoryButton = new CategoryButtonControl
             {
-                Category = new Category { Id = 0, Name = "All Products" } // Special ID for "All"
+                Category = new Category { Id = 0, Name = "All Products" } 
             };
             allCategoryButton.CategoryClicked += CategoryButton_Clicked;
             flowLayoutPanel3.Controls.Add(allCategoryButton);
@@ -657,15 +593,15 @@ namespace WinFormsApp1
 
         private void CategoryButton_Clicked(object sender, Category category)
         {
-            if (category.Id == 0) // "All Products" was clicked
+            if (category.Id == 0) // All Products tovchluuriin handler
             {
-                LoadProducts(); // Load all products
+                LoadProducts(); 
             }
             else
             {
                 LoadProductsByCategoryId(category.Id);
             }
-            txtSearch.Clear(); // Optional: Clear search text when a category is selected
+            txtSearch.Clear(); 
         }
         private void LoadProductsByCategoryId(int categoryId)
         {
@@ -679,7 +615,7 @@ namespace WinFormsApp1
             using (var connection = DatabaseHelper.GetConnection())
             {
                 connection.Open();
-                // Ensure CategoryName is selected, similar to GetAllProducts
+                
                 string query = @"SELECT p.*, c.Name as CategoryName 
                                  FROM Products p 
                                  LEFT JOIN Categories c ON p.CategoryId = c.Id 
@@ -718,13 +654,13 @@ namespace WinFormsApp1
             PdfPage page = document.AddPage();
             XGraphics gfx = XGraphics.FromPdfPage(page);
 
-            // Define fonts using PdfFontFamily for default PDF fonts
-            XFont fontTitle = new XFont("Helvetica", 18); // Bold for title
-            XFont fontHeader = new XFont("Helvetica", 12); // Bold for headers
+           
+            XFont fontTitle = new XFont("Helvetica", 18); 
+            XFont fontHeader = new XFont("Helvetica", 12); 
             XFont fontRegular = new XFont("Helvetica", 10);
             XFont fontSmall = new XFont("Helvetica", 8);
 
-            double yPosition = 40; // Starting Y position
+            double yPosition = 40; 
             double leftMargin = 40;
             double rightMargin = page.Width - 40;
             double lineHeight = 15;
@@ -733,7 +669,7 @@ namespace WinFormsApp1
             double qtyIndent = rightMargin - 150;
             double lineTotalIndent = rightMargin - 50;
 
-            // --- Header ---
+            
             gfx.DrawString("RECEIPT", fontTitle, XBrushes.Black, new XPoint(page.Width / 2, yPosition), XStringFormats.TopCenter);
             yPosition += lineHeight * 2;
 
@@ -742,7 +678,7 @@ namespace WinFormsApp1
             gfx.DrawString($"Cashier: {cashier.Username}", fontRegular, XBrushes.Black, new XPoint(leftMargin, yPosition));
             yPosition += lineHeight * 1.5;
 
-            // --- Items Header ---
+            
             gfx.DrawLine(XPens.Black, leftMargin, yPosition, rightMargin, yPosition); // Separator
             yPosition += 10;
             gfx.DrawString("Item", fontHeader, XBrushes.Black, new XPoint(itemIndent, yPosition));
@@ -753,7 +689,7 @@ namespace WinFormsApp1
             gfx.DrawLine(XPens.Black, leftMargin, yPosition, rightMargin, yPosition); // Separator
             yPosition += lineHeight;
 
-            // --- Cart Items ---
+            
             foreach (var item in cartItems)
             {
                 gfx.DrawString(item.Product.Name, fontRegular, XBrushes.Black, new XPoint(itemIndent, yPosition));
@@ -766,9 +702,7 @@ namespace WinFormsApp1
             gfx.DrawLine(XPens.Black, leftMargin, yPosition, rightMargin, yPosition); // Separator
             yPosition += lineHeight;
 
-            // --- Totals ---
-            // Note: XStringFormat is not strictly necessary for simple left-aligned strings,
-            // but useful if you need precise alignment. For your current usage, it's fine.
+          
             XStringFormat rightAlignFormat = new XStringFormat { Alignment = XStringAlignment.Far };
 
             gfx.DrawString("Total:", fontHeader, XBrushes.Black, new XPoint(priceIndent - 30, yPosition));
@@ -783,17 +717,17 @@ namespace WinFormsApp1
             gfx.DrawString($"{changeGiven:C}", fontRegular, XBrushes.Black, new XPoint(lineTotalIndent, yPosition));
             yPosition += lineHeight * 2;
 
-            // --- Footer ---
+           
             gfx.DrawString("Thank you for your purchase!", fontHeader, XBrushes.Black, new XPoint(page.Width / 2, yPosition), XStringFormats.TopCenter);
             yPosition += lineHeight;
             gfx.DrawString("Retail Supermarket", fontSmall, XBrushes.Gray, new XPoint(page.Width / 2, yPosition), XStringFormats.TopCenter);
 
-            // --- Save the PDF ---
+           
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 Filter = "PDF files (*.pdf)|*.pdf",
                 Title = "Save Receipt",
-                FileName = $"Receipt_{DateTime.Now:yyyyMMddHHmmss}.pdf", // Default filename
+                FileName = $"Receipt_{DateTime.Now:yyyyMMddHHmmss}.pdf", 
                 DefaultExt = "pdf",
                 AddExtension = true
             };
@@ -805,7 +739,7 @@ namespace WinFormsApp1
                     document.Save(saveFileDialog.FileName);
                     MessageBox.Show($"Receipt saved to {saveFileDialog.FileName}", "Receipt Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // Optionally, open the PDF after saving
+                    
                     DialogResult dr = MessageBox.Show("Do you want to open the receipt?", "Open Receipt", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (dr == DialogResult.Yes)
                     {

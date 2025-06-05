@@ -37,25 +37,25 @@ namespace WinFormsApp1
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
-            // Employee selection
+           
             Label lblEmployee = new Label() { Text = "Select Employee:", Location = new Point(20, 30), Size = new Size(100, 23) };
             cmbEmployee = new ComboBox() { Location = new Point(130, 27), Size = new Size(220, 23), DropDownStyle = ComboBoxStyle.DropDownList };
             cmbEmployee.SelectedIndexChanged += CmbEmployee_SelectedIndexChanged;
 
-            // Username
+            
             Label lblUsername = new Label() { Text = "Username:", Location = new Point(20, 70), Size = new Size(80, 23) };
             txtUsername = new TextBox() { Location = new Point(130, 67), Size = new Size(220, 23) };
 
-            // Password
+            
             Label lblPassword = new Label() { Text = "New Password:", Location = new Point(20, 110), Size = new Size(100, 23) };
             txtPassword = new TextBox() { Location = new Point(130, 107), Size = new Size(220, 23), UseSystemPasswordChar = true };
 
-            // Role
+            
             Label lblRole = new Label() { Text = "Role:", Location = new Point(20, 150), Size = new Size(80, 23) };
             cmbRole = new ComboBox() { Location = new Point(130, 147), Size = new Size(220, 23), DropDownStyle = ComboBoxStyle.DropDownList };
             cmbRole.Items.AddRange(new string[] { "Cashier", "Manager" });
 
-            // Buttons
+            
             btnUpdate = new Button() { Text = "Update", Location = new Point(195, 200), Size = new Size(75, 30) };
             btnCancel = new Button() { Text = "Cancel", Location = new Point(275, 200), Size = new Size(75, 30) };
 
@@ -106,7 +106,7 @@ namespace WinFormsApp1
                 selectedUser = (User)cmbEmployee.SelectedItem;
                 txtUsername.Text = selectedUser.Username;
                 cmbRole.SelectedItem = selectedUser.Role;
-                txtPassword.Text = ""; // Don't show existing password
+                txtPassword.Text = ""; 
             }
         }
 
@@ -125,7 +125,7 @@ namespace WinFormsApp1
                     connection.Open();
                     string query = "UPDATE Users SET Username = @username, Role = @role";
 
-                    // Only update password if a new one is provided
+                    
                     if (!string.IsNullOrWhiteSpace(txtPassword.Text))
                     {
                         query += ", Password = @password";

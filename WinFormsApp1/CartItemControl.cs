@@ -15,7 +15,7 @@ namespace WinFormsApp1
 
         private CartItem _cartItem;
 
-        // Events to communicate back to the parent form
+        // Mainformtoigoo hariltsah eventuud
         public event EventHandler<CartItem> PlusClicked;
         public event EventHandler<CartItem> MinusClicked;
         public event EventHandler<CartItem> DeleteClicked;
